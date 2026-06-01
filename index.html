@@ -349,65 +349,86 @@ canvas#wheel{max-width:260px;width:100%;display:block;margin:0 auto;}
       <span style="font-family:'Playfair Display',serif;font-size:1.1rem;color:white;">Spotify DJ</span>
       <span class="sp-badge">Session collaborative</span>
     </div>
-    <div style="font-size:0.82rem;color:rgba(250,245,233,0.65);line-height:1.6;margin:0.8rem 0;">
-      Le DJ lance une session sur le PC — chacun peut ajouter des titres depuis son téléphone, <strong style="color:white;">sans compte Spotify</strong>.
+
+    <!-- Ce que ça fait vraiment -->
+    <div style="background:rgba(29,185,84,0.1);border:1px solid rgba(29,185,84,0.2);border-radius:10px;padding:0.8rem;margin:0.8rem 0;">
+      <div style="font-size:0.8rem;color:white;font-weight:500;margin-bottom:0.4rem;">🎵 C'est quoi exactement ?</div>
+      <div style="font-size:0.78rem;color:rgba(250,245,233,0.7);line-height:1.6;">
+        Tout le monde écoute <strong style="color:white;">la même musique en même temps</strong>.<br>
+        Chaque invité peut <strong style="color:white;">proposer le titre suivant</strong> depuis son téléphone — le DJ garde le contrôle Play/Pause.
+      </div>
     </div>
 
-    <!-- Étapes -->
-    <div class="sp-steps">
+    <!-- Étapes DJ -->
+    <div style="font-size:0.72rem;color:var(--gold);letter-spacing:0.08em;text-transform:uppercase;font-weight:600;margin-bottom:0.5rem;">👑 Pour le DJ (sur le PC)</div>
+    <div class="sp-steps" style="margin-top:0;">
       <div class="sp-step">
         <div class="sp-num">1</div>
         <div>
-          <div class="sp-step-title">Sur le PC (avec Spotify ouvert)</div>
-          <div class="sp-step-desc">Jouer n'importe quel titre → cliquer les <strong style="color:white;">…</strong> → <strong style="color:white;">Session d'écoute</strong> → <strong style="color:white;">Démarrer une session</strong></div>
+          <div class="sp-step-title">Lancer la session</div>
+          <div class="sp-step-desc">Dans Spotify → jouer un titre → cliquer <strong style="color:white;">…</strong> → <strong style="color:white;">Session d'écoute</strong> → <strong style="color:white;">Démarrer</strong></div>
         </div>
       </div>
       <div class="sp-step">
         <div class="sp-num">2</div>
         <div>
-          <div class="sp-step-title">Un QR code apparaît sur le PC</div>
-          <div class="sp-step-desc">Le DJ montre l'écran ou colle le lien dans le groupe WhatsApp</div>
-        </div>
-      </div>
-      <div class="sp-step">
-        <div class="sp-num">3</div>
-        <div>
-          <div class="sp-step-title">Chacun scanne et rejoint</div>
-          <div class="sp-step-desc">Dans la session → <strong style="color:white;">File d'attente</strong> → chercher et ajouter son titre ✨</div>
+          <div class="sp-step-title">Partager le QR code qui apparaît</div>
+          <div class="sp-step-desc">Montrer l'écran du PC, ou coller le lien dans WhatsApp, ou le coller ci-dessous ↓</div>
         </div>
       </div>
     </div>
 
-    <button class="btn-full sp-btn" onclick="openSpotifyApp()">
+    <div class="divider" style="margin:0.7rem 0;"></div>
+
+    <!-- Étapes invité -->
+    <div style="font-size:0.72rem;color:rgba(250,245,233,0.5);letter-spacing:0.08em;text-transform:uppercase;font-weight:600;margin-bottom:0.5rem;">🙋 Pour les invités</div>
+    <div class="sp-steps" style="margin-top:0;">
+      <div class="sp-step">
+        <div class="sp-num">1</div>
+        <div>
+          <div class="sp-step-title">Scanner le QR code du DJ</div>
+          <div class="sp-step-desc">Spotify s'ouvre sur ton téléphone · <strong style="color:white;">Compte Spotify gratuit requis</strong></div>
+        </div>
+      </div>
+      <div class="sp-step">
+        <div class="sp-num">2</div>
+        <div>
+          <div class="sp-step-title">Ajouter ton titre à la file</div>
+          <div class="sp-step-desc">Dans la session → <strong style="color:white;">File d'attente</strong> → chercher → <strong style="color:white;">Ajouter à la suite</strong> ✨</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-full sp-btn" onclick="openSpotifyApp()" style="margin-top:0.8rem;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="vertical-align:-2px;margin-right:6px;"><circle cx="12" cy="12" r="12" fill="white" fill-opacity="0.2"/><path d="M16.7 16.2c-.2 0-.3-.1-.5-.2-1.7-1-3.8-1.6-6.1-1.6-1.3 0-2.5.2-3.7.4-.2 0-.4 0-.5-.1-.1-.1-.2-.3-.2-.5s.1-.4.3-.5c1.3-.3 2.7-.5 4.1-.5 2.6 0 4.9.6 6.8 1.8.2.1.3.3.3.5-.1.4-.3.7-.5.7zm.9-2.3c-.2 0-.4-.1-.5-.2-1.9-1.2-4.5-1.9-7.3-1.9-1.5 0-2.9.2-4.1.6-.2.1-.5 0-.6-.1-.2-.2-.2-.5-.1-.7.1-.2.4-.3.6-.4 1.3-.4 2.8-.6 4.3-.6 3.1 0 5.9.8 8.1 2.2.2.1.3.4.3.6-.1.3-.4.5-.7.5zm1-2.4c-.2 0-.3 0-.5-.1-2.2-1.3-5.2-2-8.3-2-1.6 0-3.1.2-4.6.6-.3.1-.6-.1-.7-.4-.1-.3.1-.6.4-.7 1.5-.4 3.2-.7 4.9-.7 3.3 0 6.5.8 9 2.2.3.2.4.5.2.8-.1.2-.3.3-.4.3z" fill="white"/></svg>
       Ouvrir Spotify
     </button>
-    <div class="hint" style="margin-top:0.5rem;">Nécessite Spotify Premium sur le PC · Gratuit pour les invités</div>
+    <div class="hint" style="margin-top:0.4rem;">Premium requis sur le PC · Compte gratuit suffit pour les invités</div>
   </div>
 
   <!-- LIEN SESSION (coller par le DJ) -->
   <div class="card" style="border-color:rgba(29,185,84,0.25);">
-    <div class="card-title" style="font-size:0.95rem;">🔗 Lien de la session (facultatif)</div>
-    <div style="font-size:0.8rem;color:rgba(250,245,233,0.6);margin-bottom:0.7rem;">Le DJ peut coller ici le lien de la session Spotify → un QR code s'affiche pour les retardataires !</div>
+    <div class="card-title" style="font-size:0.95rem;">🔗 Lien de la session Spotify</div>
+    <div style="font-size:0.8rem;color:rgba(250,245,233,0.6);margin-bottom:0.7rem;">Le DJ colle ici le lien de sa session → un QR code s'affiche, les invités scannent et rejoignent directement !</div>
     <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem;">
-      <input id="sp-session-inp" class="inp" placeholder="https://open.spotify.com/..." style="flex:1;">
+      <input id="sp-session-inp" class="inp" placeholder="https://open.spotify.com/session/..." style="flex:1;">
       <button class="btn-sm" style="background:#1DB954;color:white;border:none;" onclick="generateSpotifyQR()">QR</button>
     </div>
     <div id="sp-qr-wrap" style="display:none;text-align:center;margin:0.7rem 0;">
       <div style="display:inline-block;background:white;border-radius:12px;padding:0.8rem;">
         <div id="sp-qr-code"></div>
-        <div style="font-size:0.75rem;color:#1a1a2e;font-family:'Caveat',cursive;margin-top:0.3rem;">🎵 Scanner pour rejoindre</div>
+        <div style="font-size:0.75rem;color:#1a1a2e;font-family:'Caveat',cursive;margin-top:0.3rem;">🎵 Scanner pour rejoindre la session</div>
       </div>
     </div>
     <div id="sp-qr-btn-wrap" style="display:none;">
-      <button class="btn-full sp-btn" id="sp-join-btn">Rejoindre la session</button>
+      <button class="btn-full sp-btn" id="sp-join-btn">📱 Rejoindre la session</button>
     </div>
   </div>
 
   <!-- AMBIANCES -->
   <div class="card">
-    <div class="card-title">🎨 Ambiances & playlists suggérées</div>
-    <div style="font-size:0.78rem;color:rgba(250,245,233,0.5);margin-bottom:0.8rem;">Envoie ces liens au DJ pour qu'il les joue au bon moment :</div>
+    <div class="card-title">🎨 Ambiances par moment</div>
+    <div style="font-size:0.78rem;color:rgba(250,245,233,0.5);margin-bottom:0.8rem;">Le DJ clique pour ouvrir la playlist du moment dans Spotify :</div>
     <div class="ambiance-grid">
       <div class="ambiance-tile" onclick="openAmbiance('apero champetre france playlist')">
         <div class="amb-icon">🍷</div>
@@ -440,28 +461,8 @@ canvas#wheel{max-width:260px;width:100%;display:block;margin:0 auto;}
         <div class="amb-sub">Dimanche</div>
       </div>
     </div>
-    <div class="hint" style="margin-top:0.7rem;">Clique une ambiance → s'ouvre dans Spotify</div>
+    <div class="hint" style="margin-top:0.5rem;">S'ouvre directement dans Spotify · Pas sur YouTube</div>
   </div>
-
-  <!-- PLAN B JUKEBOX -->
-  <details style="margin-bottom:1rem;">
-    <summary style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:0.9rem 1rem;cursor:pointer;font-size:0.85rem;color:rgba(250,245,233,0.6);list-style:none;display:flex;align-items:center;justify-content:space-between;">
-      <span>📋 Plan B — Jukebox sans Spotify</span>
-      <span style="font-size:0.7rem;opacity:0.5;">▼ ouvrir</span>
-    </summary>
-    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-top:none;border-radius:0 0 12px 12px;padding:1rem;">
-      <div style="font-size:0.8rem;color:rgba(250,245,233,0.6);margin-bottom:0.7rem;">Pas de Premium ? Chacun note son titre, le DJ cherche sur YouTube :</div>
-      <div style="display:flex;gap:0.5rem;margin-bottom:0.6rem;">
-        <input id="song-inp" class="inp" placeholder="Artiste - Titre à proposer..." style="flex:1;" onkeydown="if(event.key==='Enter')addSong()">
-        <button class="btn-sm" onclick="addSong()">+</button>
-      </div>
-      <div id="queue-list"></div>
-      <div style="display:flex;gap:0.5rem;margin-top:0.6rem;">
-        <button class="btn-full" onclick="openYoutube()" style="flex:1;font-size:0.8rem;padding:0.6rem;">▶ YouTube</button>
-        <button class="btn-full btn-outline" onclick="clearQueue()" style="flex:0 0 2.5rem;font-size:0.8rem;padding:0.6rem;">🗑️</button>
-      </div>
-    </div>
-  </details>
 
 </section>
 
