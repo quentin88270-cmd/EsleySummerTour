@@ -109,6 +109,13 @@ canvas#wheel{max-width:260px;width:100%;display:block;margin:0 auto;}
 .game-emoji{font-size:1.4rem;}
 .game-desc{font-size:0.78rem;color:rgba(250,245,233,0.55);line-height:1.5;}
 .bottom-safe{height:1.5rem;}
+.sub-tab{flex:1;padding:0.55rem 0.5rem;background:none;border:none;color:rgba(250,245,233,0.5);font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:500;cursor:pointer;border-radius:9px;transition:all 0.2s;}
+.sub-tab.active{background:rgba(245,200,66,0.15);color:var(--gold);font-weight:600;}
+.histo-card{background:rgba(255,255,255,0.04);border-radius:14px;padding:1rem;margin-bottom:0.8rem;border:1px solid rgba(255,255,255,0.07);}
+.histo-title{font-family:'Playfair Display',serif;font-size:0.95rem;color:rgba(250,245,233,0.6);margin-bottom:0.6rem;display:flex;justify-content:space-between;align-items:center;}
+.histo-date{font-size:0.68rem;color:rgba(250,245,233,0.35);}
+.histo-row{display:flex;align-items:center;gap:0.5rem;padding:0.3rem 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.histo-row:last-child{border-bottom:none;}
 /* WHATSAPP */
 .wa-instructions{background:rgba(37,211,102,0.08);border:1px solid rgba(37,211,102,0.25);border-radius:12px;padding:1rem;margin-bottom:0.8rem;}
 .wa-step{display:flex;align-items:flex-start;gap:0.7rem;margin-bottom:0.6rem;font-size:0.82rem;color:rgba(250,245,233,0.8);}
@@ -179,30 +186,62 @@ canvas#wheel{max-width:260px;width:100%;display:block;margin:0 auto;}
 <section class="section" id="section-equipes">
   <div class="sec-title">Équipes & tirage 🎰</div>
 
-  <div class="card">
-    <div class="card-title">👥 Les participants</div>
-    <div style="display:flex;gap:0.5rem;margin-bottom:0.7rem;">
-      <input id="player-inp" class="inp" placeholder="Prénom du participant" style="flex:1;" onkeydown="if(event.key==='Enter')addPlayer()">
-      <button class="btn-sm" onclick="addPlayer()">+</button>
+  <!-- Sous-onglets -->
+  <div style="display:flex;background:rgba(255,255,255,0.05);border-radius:12px;padding:0.25rem;gap:0.25rem;margin-bottom:1rem;">
+    <button class="sub-tab active" id="stab-equipes" onclick="subTab('equipes')">🏆 Équipes</button>
+    <button class="sub-tab" id="stab-histo" onclick="subTab('histo')">📜 Historique</button>
+  </div>
+
+  <!-- ONGLET ÉQUIPES -->
+  <div id="sub-equipes">
+    <div class="card">
+      <div class="card-title">👥 Les participants</div>
+      <div style="display:flex;gap:0.5rem;margin-bottom:0.7rem;">
+        <input id="player-inp" class="inp" placeholder="Prénom du participant" style="flex:1;" onkeydown="if(event.key==='Enter')addPlayer()">
+        <button class="btn-sm" onclick="addPlayer()">+</button>
+      </div>
+      <div id="players-list" style="display:flex;flex-wrap:wrap;gap:0.4rem;min-height:1.5rem;"></div>
+      <div class="hint" id="player-count">0 participant·e·s</div>
     </div>
-    <div id="players-list" style="display:flex;flex-wrap:wrap;gap:0.4rem;min-height:1.5rem;"></div>
-    <div class="hint" id="player-count">0 participant·e·s</div>
+
+    <div class="card">
+      <div class="card-title">🏷️ Nombre d'équipes</div>
+      <div style="display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;" id="team-count-btns"></div>
+    </div>
+
+    <button class="btn-full" onclick="doTirage()">🎰 Lancer le tirage aléatoire !</button>
+
+    <div class="divider"></div>
+
+    <!-- Équipes actuelles avec suppression -->
+    <div id="teams-result"></div>
+
+    <!-- Ajouter équipe manuelle -->
+    <div class="card" style="border-style:dashed;border-color:rgba(255,255,255,0.15);">
+      <div class="card-title" style="font-size:0.9rem;">➕ Ajouter une équipe manuellement</div>
+      <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem;">
+        <input id="team-name-inp" class="inp" placeholder="Nom de l'équipe..." style="flex:1;" onkeydown="if(event.key==='Enter')addTeamManual()">
+        <button class="btn-sm" onclick="addTeamManual()">+</button>
+      </div>
+      <div style="font-size:0.72rem;color:rgba(250,245,233,0.35);">Tu pourras ensuite y glisser des membres</div>
+    </div>
+
+    <!-- Scores actifs -->
+    <div class="card" style="margin-top:0.2rem;">
+      <div class="card-title">🏅 Scores en cours</div>
+      <div id="team-scores"></div>
+      <div class="hint" id="scores-hint">Lance un tirage ou ajoute une équipe</div>
+      <button class="btn-full btn-outline" onclick="clorePartie()" style="margin-top:0.7rem;font-size:0.8rem;padding:0.6rem;">📌 Clôturer & archiver cette partie</button>
+    </div>
   </div>
 
-  <div class="card">
-    <div class="card-title">🏷️ Nombre d'équipes</div>
-    <div style="display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;" id="team-count-btns"></div>
+  <!-- ONGLET HISTORIQUE -->
+  <div id="sub-histo" style="display:none;">
+    <div id="histo-list"></div>
+    <div id="histo-empty" class="hint" style="text-align:center;padding:2rem 0;">Aucune partie archivée pour l'instant</div>
+    <button class="btn-full btn-outline" onclick="if(confirm('Effacer tout l\'historique ?'))clearHisto();" style="margin-top:0.5rem;font-size:0.8rem;padding:0.6rem;">🗑️ Effacer l'historique</button>
   </div>
 
-  <button class="btn-full" onclick="doTirage()" id="tirage-btn">🎰 Lancer le tirage aléatoire !</button>
-
-  <div id="teams-result" style="margin-top:1rem;"></div>
-
-  <div class="card" style="margin-top:0.5rem;">
-    <div class="card-title">🏅 Scores par équipe</div>
-    <div id="team-scores"></div>
-    <div class="hint" id="scores-hint">Lance d'abord un tirage</div>
-  </div>
 </section>
 
 <!-- JEUX INTERVILLAGE -->
@@ -401,15 +440,27 @@ function nav(id,btn){
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 
 // ─── ÉQUIPES ─────────────────────────────────
-const TEAM_NAMES=['Les Renards 🦊','Les Aigles 🦅','Les Loups 🐺','Les Sangliers 🐗','Les Cerfs 🦌','Les Lynx 🐱','Les Castors 🦫','Les Chouettes 🦉'];
-const TEAM_COLORS=['#c96b3a','#5a7a5a','#d4596a','#f5c842','#3a6bc9','#9a5ac9','#3a9ac9','#c9a43a'];
+const TEAM_NAMES=['Les Renards 🦊','Les Aigles 🦅','Les Loups 🐺','Les Sangliers 🐗','Les Cerfs 🦌','Les Lynx 🐱','Les Castors 🦫','Les Chouettes 🦉','Les Hiboux 🦉','Les Blaireaux 🦡'];
+const TEAM_COLORS=['#c96b3a','#5a7a5a','#d4596a','#f5c842','#3a6bc9','#9a5ac9','#3a9ac9','#c9a43a','#2a9a6a','#c93a7a'];
 let players=JSON.parse(localStorage.getItem('ste_players')||'[]');
 let teams=JSON.parse(localStorage.getItem('ste_teams')||'[]');
+let histo=JSON.parse(localStorage.getItem('ste_histo')||'[]');
 let selectedTeamCount=2;
 
 function savePlayers(){localStorage.setItem('ste_players',JSON.stringify(players));}
 function saveTeams(){localStorage.setItem('ste_teams',JSON.stringify(teams));}
+function saveHisto(){localStorage.setItem('ste_histo',JSON.stringify(histo));}
 
+// ── sous-onglets
+function subTab(tab){
+  document.getElementById('sub-equipes').style.display=tab==='equipes'?'block':'none';
+  document.getElementById('sub-histo').style.display=tab==='histo'?'block':'none';
+  document.getElementById('stab-equipes').classList.toggle('active',tab==='equipes');
+  document.getElementById('stab-histo').classList.toggle('active',tab==='histo');
+  if(tab==='histo') renderHisto();
+}
+
+// ── participants
 function addPlayer(){
   const inp=document.getElementById('player-inp');
   const n=inp.value.trim();
@@ -417,20 +468,17 @@ function addPlayer(){
   if(players.includes(n)){showToast('Déjà dans la liste !');return;}
   players.push(n);inp.value='';savePlayers();renderPlayers();
 }
-
-function removePlayer(name){
-  players=players.filter(p=>p!==name);savePlayers();renderPlayers();
-}
-
+function removePlayer(name){players=players.filter(p=>p!==name);savePlayers();renderPlayers();}
 function renderPlayers(){
   const c=document.getElementById('players-list');
-  c.innerHTML=players.map(p=>`<span style="background:rgba(255,255,255,0.08);border-radius:20px;padding:0.25rem 0.6rem 0.25rem 0.5rem;font-size:0.78rem;cursor:pointer;border:1px solid rgba(255,255,255,0.15);" onclick="removePlayer('${p}')">${p} ✕</span>`).join('');
+  c.innerHTML=players.map(p=>`<span style="background:rgba(255,255,255,0.08);border-radius:20px;padding:0.25rem 0.6rem 0.25rem 0.5rem;font-size:0.78rem;cursor:pointer;border:1px solid rgba(255,255,255,0.15);" onclick="removePlayer('${p.replace(/'/g,"\\'")}')">${p} ✕</span>`).join('');
   document.getElementById('player-count').textContent=players.length+' participant·e·s — Clique sur un nom pour le retirer';
   renderTeamCountBtns();
 }
 
+// ── nb équipes
 function renderTeamCountBtns(){
-  const max=Math.min(6,Math.max(2,players.length));
+  const max=Math.min(8,Math.max(2,players.length));
   const c=document.getElementById('team-count-btns');
   c.innerHTML='';
   for(let i=2;i<=max;i++){
@@ -440,29 +488,66 @@ function renderTeamCountBtns(){
     b.onclick=(()=>{const n=i;return()=>{selectedTeamCount=n;renderTeamCountBtns();};})();
     c.appendChild(b);
   }
+  // bouton personnalisé
+  const bc=document.createElement('button');
+  bc.className='timer-btn t-preset';bc.textContent='Manuel';
+  bc.onclick=()=>{selectedTeamCount=0;renderTeamCountBtns();};
+  c.appendChild(bc);
 }
 
+// ── tirage
 function doTirage(){
   if(players.length<2){showToast('Ajoute au moins 2 joueurs !');return;}
   const shuffled=[...players].sort(()=>Math.random()-0.5);
-  const n=Math.min(selectedTeamCount,players.length);
+  const n=selectedTeamCount>0?Math.min(selectedTeamCount,players.length):2;
+  // conserver couleurs existantes si même nombre
+  const prevColors=teams.reduce((m,t)=>{m[t.name]=t.color;return m;},{});
   teams=[];
-  for(let i=0;i<n;i++) teams.push({name:TEAM_NAMES[i],color:TEAM_COLORS[i],members:[],score:0});
+  for(let i=0;i<n;i++){
+    const name=TEAM_NAMES[i];
+    teams.push({name,color:prevColors[name]||TEAM_COLORS[i],members:[],score:0});
+  }
   shuffled.forEach((p,i)=>teams[i%n].members.push(p));
   saveTeams();renderTirage();renderTeamScores();
   showToast('🎰 Tirage effectué !');
 }
 
+// ── ajout manuel d'équipe
+function addTeamManual(){
+  const inp=document.getElementById('team-name-inp');
+  const n=inp.value.trim();
+  if(!n)return;
+  if(teams.find(t=>t.name===n)){showToast('Cette équipe existe déjà !');return;}
+  const idx=teams.length%TEAM_COLORS.length;
+  teams.push({name:n,color:TEAM_COLORS[idx],members:[],score:0});
+  inp.value='';saveTeams();renderTirage();renderTeamScores();
+  showToast('✅ Équipe "'+n+'" ajoutée !');
+}
+
+// ── supprimer une équipe
+function deleteTeam(name){
+  if(!confirm('Supprimer "'+name+'" ?')) return;
+  // archiver son score avant suppression
+  teams=teams.filter(t=>t.name!==name);
+  saveTeams();renderTirage();renderTeamScores();
+  showToast('🗑️ Équipe supprimée');
+}
+
+// ── rendu équipes
 function renderTirage(){
   const c=document.getElementById('teams-result');
   if(!teams.length){c.innerHTML='';return;}
   c.innerHTML=teams.map(t=>`
-    <div class="team-card" style="background:${t.color}22;border-color:${t.color}55;">
-      <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:${t.color};margin-bottom:0.5rem;">${t.name}</div>
-      <div>${t.members.map(m=>`<span class="team-member">${m}</span>`).join('')}</div>
+    <div class="team-card" style="background:${t.color}22;border-color:${t.color}55;position:relative;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+        <div style="font-family:'Playfair Display',serif;font-size:1.05rem;color:${t.color};">${t.name}</div>
+        <button onclick="deleteTeam('${t.name.replace(/'/g,"\\'")}')" style="background:rgba(212,89,106,0.2);border:1px solid rgba(212,89,106,0.35);color:#d4596a;border-radius:20px;padding:0.2rem 0.6rem;font-size:0.7rem;cursor:pointer;">✕ Suppr.</button>
+      </div>
+      <div>${t.members.length?t.members.map(m=>`<span class="team-member">${m}</span>`).join(''):'<span style="font-size:0.75rem;color:rgba(250,245,233,0.3);">Aucun membre</span>'}</div>
     </div>`).join('');
 }
 
+// ── scores
 function renderTeamScores(){
   const c=document.getElementById('team-scores');
   const h=document.getElementById('scores-hint');
@@ -471,12 +556,12 @@ function renderTeamScores(){
   const sorted=[...teams].sort((a,b)=>b.score-a.score);
   c.innerHTML=sorted.map((t,i)=>`
     <div class="score-row">
-      <span style="font-size:1rem;margin-right:0.3rem;">${i===0?'🥇':i===1?'🥈':i===2?'🥉':''}</span>
-      <span style="color:${t.color};font-weight:500;font-size:0.9rem;">${t.name}</span>
+      <span style="font-size:1rem;margin-right:0.2rem;">${i===0?'🥇':i===1?'🥈':i===2?'🥉':'  '}</span>
+      <span style="color:${t.color};font-weight:500;font-size:0.88rem;flex:1;">${t.name}</span>
       <div style="display:flex;align-items:center;gap:0.4rem;">
-        <button class="score-edit" onclick="changeTeamScore('${t.name}',-1)">−</button>
-        <span style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--gold);min-width:2rem;text-align:center;">${t.score}</span>
-        <button class="score-edit" onclick="changeTeamScore('${t.name}',1)">+</button>
+        <button class="score-edit" onclick="changeTeamScore('${t.name.replace(/'/g,"\\'")}',-1)">−</button>
+        <span style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--gold);min-width:2.2rem;text-align:center;">${t.score}</span>
+        <button class="score-edit" onclick="changeTeamScore('${t.name.replace(/'/g,"\\'")}',1)">+</button>
       </div>
     </div>`).join('');
 }
@@ -485,6 +570,45 @@ function changeTeamScore(name,delta){
   const t=teams.find(x=>x.name===name);
   if(t){t.score=Math.max(0,t.score+delta);saveTeams();renderTeamScores();}
 }
+
+// ── clore & archiver
+function clorePartie(){
+  if(!teams.length){showToast('Aucune équipe à archiver !');return;}
+  const hasScore=teams.some(t=>t.score>0);
+  if(!hasScore&&!confirm('Aucun score enregistré. Archiver quand même ?')) return;
+  const now=new Date();
+  const label=now.toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'})+' '+now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  const sorted=[...teams].sort((a,b)=>b.score-a.score);
+  histo.unshift({date:label,teams:sorted.map(t=>({name:t.name,color:t.color,score:t.score,members:t.members}))});
+  saveHisto();
+  // reset scores (garder équipes)
+  teams.forEach(t=>t.score=0);
+  saveTeams();renderTeamScores();
+  showToast('📌 Partie archivée !');
+}
+
+// ── historique
+function renderHisto(){
+  const c=document.getElementById('histo-list');
+  const e=document.getElementById('histo-empty');
+  if(!histo.length){c.innerHTML='';e.style.display='';return;}
+  e.style.display='none';
+  c.innerHTML=histo.map((h,hi)=>`
+    <div class="histo-card">
+      <div class="histo-title">
+        <span>Partie #${histo.length-hi}</span>
+        <span class="histo-date">${h.date}</span>
+      </div>
+      ${h.teams.map((t,i)=>`
+        <div class="histo-row">
+          <span style="font-size:0.9rem;">${i===0?'🥇':i===1?'🥈':i===2?'🥉':'  '}</span>
+          <span style="color:${t.color};font-size:0.85rem;font-weight:500;flex:1;">${t.name}</span>
+          <span style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);">${t.score} pts</span>
+        </div>`).join('')}
+      ${h.teams[0]?`<div style="margin-top:0.6rem;font-size:0.72rem;color:rgba(250,245,233,0.35);">🏆 Vainqueur : <span style="color:${h.teams[0].color};">${h.teams[0].name}</span></div>`:''}
+    </div>`).join('');
+}
+function clearHisto(){histo=[];saveHisto();renderHisto();showToast('🗑️ Historique effacé');}
 
 renderPlayers();renderTirage();renderTeamScores();
 renderTeamCountBtns();
